@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AXOLOOK</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #ffffff;
+      --secondary-color: #000000;
+      --accent-color: #ff3366;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      overflow-x: hidden;
+      perspective: 1000px;
+    }
+    
+    /* Scroll button */
+    .scroll-btn {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--primary-color);
+      font-size: 24px;
+      text-decoration: none;
+      z-index: 100;
+      opacity: 0.7;
+      transition: all 0.5s ease;
+      animation: bounce 2s infinite;
+    }
+    
+    .scroll-btn:hover {
+      opacity: 1;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+      40% {transform: translateY(-20px) translateX(-50%);}
+      60% {transform: translateY(-10px) translateX(-50%);}
+    }
+    
+    /* Logo */
+    .logo-container {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      opacity: 1;
+      transition: opacity 1s ease;
+      background: rgba(0,0,0,0.7);
+      padding: 10px 30px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+    
+    .logo-img {
+      height: 40px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+    
+    /* Social icons - Spostato in alto a destra */
+    .social {
+      position: fixed;
+      right: 30px;
+      top: 30px;
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+      background: rgba(0,0,0,0.7);
+      padding: 10px 15px;
+      border-radius: 50px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+    
+    .social a {
+      color: var(--primary-color);
+      font-size: 20px;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    
+    .social a:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    
+    /* Banner section */
+    .banner {
+      height: 100vh;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+    }
+    
+    .slider.small .item {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      filter: grayscale(100%) brightness(0.3);
+      transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .slider.small .item:hover {
+      filter: grayscale(0%) brightness(0.6);
+    }
+    
+    .slider.small .item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease;
+    }
+    
+    .author h2 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #ff3366; /* Colore rosso/rosa per BETA TEST */
+    text-shadow: 0 0 10px rgba(255,51,102,0.5);
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 1s ease 0.3s;
+  }
+
+  .author p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    color: white; /* Colore bianco per Web Design */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease 0.6s;
+  }
+    
+    .model {
+      width: 300px;
+      height: 300px;
+      margin: 0 auto;
+      position: relative;
+      opacity: 0;
+      transform: scale(0.5) rotateY(180deg);
+      filter: blur(10px);
+      transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s;
+    }
+    
+    /* About section */
+    .about-section {
+      min-height: 100vh;
+      padding: 100px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .about-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    model-viewer {
+      width: 500px;
+      height: 500px;
+      opacity: 0;
+      transform: translateX(-100px) rotateY(90deg);
+      filter: blur(5px);
+      transition: all 1.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      pointer-events: none;
+    }
+    
+    .about-content {
+      max-width: 500px;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease 0.5s;
+    }
+    
+    .about-content h2 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      color: white; /* Cambiato da gradient a bianco puro */
+    }
+    
+    .about-content p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    /* Animation classes */
+    .animate-in {
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) rotateY(0) translateX(0) !important;
+      filter: blur(0) !important;
+    }
+    
+    /* Smooth scroll container */
+    .smooth-scroll-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      will-change: transform;
+    }
+  </style>
+  
+</head>
+
+<body>
+  <div class="smooth-scroll-wrapper">
+    <a href="#about" class="scroll-btn">Scopri di più ↓</a>
+
+    <div class="logo-container">
+      <img src="images/logo.png" alt="AXOLOOK" class="logo-img" />
+    </div>
+
+    <div class="social">
+      <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+      <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+    </div>
+
+    <div class="banner">
+      <div class="slider small" style="--quantity: 10">
+        <div class="item" style="--position: 1"><img src="images/dragon_1.jpg" alt="" /></div>
+        <div class="item" style="--position: 2"><img src="images/dragon_2.jpg" alt="" /></div>
+        <div class="item" style="--position: 3"><img src="images/dragon_3.jpg" alt="" /></div>
+        <div class="item" style="--position: 4"><img src="images/dragon_4.jpg" alt="" /></div>
+        <div class="item" style="--position: 5"><img src="images/dragon_5.jpg" alt="" /></div>
+        <div class="item" style="--position: 6"><img src="images/dragon_6.jpg" alt="" /></div>
+        <div class="item" style="--position: 7"><img src="images/dragon_7.jpg" alt="" /></div>
+        <div class="item" style="--position: 8"><img src="images/dragon_8.jpg" alt="" /></div>
+        <div class="item" style="--position: 9"><img src="images/dragon_9.jpg" alt="" /></div>
+        <div class="item" style="--position: 10"><img src="images/dragon_10.jpg" alt="" /></div>
+      </div>
+
+      <div class="content">
+        <div class="author">
+          <h2 class="led-text">BETA TEST</h2>
+          <p><b>Web Design</b></p>
+        </div>
+        <div class="model zoom-out">
+          <model-viewer 
+            src="models/model.glb" 
+            alt="Modello 3D" 
+            camera-controls="false"
+            disable-zoom
+            disable-pan
+            disable-tap
+            auto-rotate
+            interaction-prompt="none"
+            camera-orbit="0deg 75deg 105%"
+            field-of-view="30deg"
+            shadow-intensity="1"
+            style="pointer-events: none; width: 100%; height: 100%;"
+            exposure="1.2"
+            environment-image="neutral"
+            id="modello-3d">
+          </model-viewer>
+        </div>
+      </div>
+    </div>
+
+    <section id="about" class="about-section">
+      <div class="about-container">
+        <model-viewer 
+          src="models/model.glb" 
+          alt="Modello 3D" 
+          camera-controls="false"
+          disable-zoom
+          disable-pan
+          disable-tap
+          interaction-prompt="none"
+          camera-orbit="0deg 90deg 100%"
+          field-of-view="45deg"
+          shadow-intensity="1.5"
+          style="pointer-events: none;"
+          exposure="1.5"
+          environment-image="neutral"
+          class="model-3d">
+        </model-viewer>
+
+        <div class="about-content">
+          <h2>About Us</h2>
+          <p>
+            AXOLOOK è uno software 3D che nasce da un esigenza. Spesso ti sarà capitato di voler comprare un indumento online, ma eri incerto sulla vestibilità o se quel particolare indumento andava bene nell outfit che ti eri immaginato. Ora con Axolook puoi dar vita agli outfit che ti immagini e visualizzarli in 3d, metterli addosso ad un manichino e personalizzarli!
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animate elements on scroll
+      const animateOnScroll = () => {
+        const elements = document.querySelectorAll('.content, .author h2, .author p, .model, model-viewer, .about-content');
+        const windowHeight = window.innerHeight;
+        
+        elements.forEach(element => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const elementVisible = 150;
+          
+          if (elementPosition < windowHeight - elementVisible) {
+            element.classList.add('animate-in');
+          }
+        });
+      };
+      
+      // Initial animation trigger
+      animateOnScroll();
+      
+      // Smooth scroll implementation
+      const body = document.body;
+      const scrollWrapper = document.querySelector('.smooth-scroll-wrapper');
+      let current = 0;
+      let target = 0;
+      let ease = 0.1;
+      
+      // Set wrapper height
+      function setBodyHeight() {
+        body.style.height = scrollWrapper.getBoundingClientRect().height + 'px';
+      }
+      
+      // Lerp function for smooth interpolation
+      function lerp(start, end, t) {
+        return start * (1 - t) + end * t;
+      }
+      
+      // Smooth scroll animation
+      function smoothScroll() {
+        target = window.scrollY;
+        current = lerp(current, target, ease);
+        scrollWrapper.style.transform = `translateY(${-current}px)`;
+        animateOnScroll();
+        requestAnimationFrame(smoothScroll);
+      }
+      
+      // Initialize
+      setBodyHeight();
+      window.addEventListener('resize', setBodyHeight);
+      smoothScroll();
+      
+      // Intersection Observer for more precise animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+      
+      document.querySelectorAll('.content, .author h2, .author p, .model, model-viewer, .about-content').forEach(el => {
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>

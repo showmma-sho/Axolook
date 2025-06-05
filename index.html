@@ -3,107 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AXOLOOK</title>
-  <link rel="stylesheet" href="style.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    referrerpolicy="no-referrer"
-  />
-  <script defer src="script.js"></script>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <title>Loading Animation</title>
   <style>
-    html {
-      scroll-behavior: smooth;
+    @font-face {
+      font-family: 'hansgotish';
+      src: url('HANSG___.TTF') format('truetype');
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0;
+      background-color: #fdf6e3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'hansgotish', sans-serif;
+    }
+
+    .loader-container {
+      width: 100%;
+      max-width: 500px;
+      height: 100px;
+    }
+
+    svg.loader-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    text.loader-text {
+      fill: transparent;
+      stroke: #444444;
+      stroke-width: 0.1;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 5s ease forwards, fillText 1s ease forwards 1.3s;
+      font-weight: 700;
+      font-size: 100px;
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      user-select: none;
+    }
+
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes fillText {
+      from {
+        fill: transparent;
+      }
+      to {
+        fill: #b8a486;
+      }
     }
   </style>
 
-  <script>
-    // Smooth scroll con frizione
-    let scrollTimeout;
-    let lastScrollTop = window.scrollY;
-
-    window.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      clearTimeout(scrollTimeout);
-
-      const delta = Math.sign(e.deltaY);
-      const scrollAmount = 180;
-
-      const targetScroll = window.scrollY + delta * scrollAmount;
-
-      window.scrollTo({
-        top: targetScroll,
-        behavior: "smooth"
-      });
-
-      scrollTimeout = setTimeout(() => {
-        lastScrollTop = window.scrollY;
-      }, 100);
-    }, { passive: false });
+  <script type="text/javascript">
+    // Carica la pagina principale dopo il completamento dell'animazione
+    setTimeout(() => {
+      window.location.href = 'main.html';
+    }, 3800);
   </script>
 </head>
-
 <body>
-  <a href="#about" class="scroll-btn">Scopri di più ↓</a>
 
-  <div class="logo-container">
-    <img src="images/logo.png" alt="Logo" class="logo-img" />
+  <div class="loader-container">
+    <svg viewBox="0 0 600 100" class="loader-svg" xmlns="http://www.w3.org/2000/svg">
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="loader-text">
+        AXOLOOK
+      </text>
+    </svg>
   </div>
 
-  <div class="social">
-    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-    <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
-    <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
-    <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
-  </div>
-
-  <div class="banner">
-    <div class="slider small" style="--quantity: 10">
-      <div class="item" style="--position: 1"><img src="images/dragon_1.jpg" alt="" /></div>
-      <div class="item" style="--position: 2"><img src="images/dragon_2.jpg" alt="" /></div>
-      <div class="item" style="--position: 3"><img src="images/dragon_3.jpg" alt="" /></div>
-      <div class="item" style="--position: 4"><img src="images/dragon_4.jpg" alt="" /></div>
-      <div class="item" style="--position: 5"><img src="images/dragon_5.jpg" alt="" /></div>
-      <div class="item" style="--position: 6"><img src="images/dragon_6.jpg" alt="" /></div>
-      <div class="item" style="--position: 7"><img src="images/dragon_7.jpg" alt="" /></div>
-      <div class="item" style="--position: 8"><img src="images/dragon_8.jpg" alt="" /></div>
-      <div class="item" style="--position: 9"><img src="images/dragon_9.jpg" alt="" /></div>
-      <div class="item" style="--position: 10"><img src="images/dragon_10.jpg" alt="" /></div>
-    </div>
-
-    <div class="content">
-      <div class="author">
-        <h2 class="led-text">BETA TEST</h2>
-        <p><b>Web Design</b></p>
-      </div>
-      <div class="model zoom-out"></div>
-    </div>
-  </div>
-
-  <section id="about" class="about-section">
-    <div class="about-container">
-      <model-viewer 
-        src="models/model.glb" 
-        alt="Modello 3D" 
-        camera-controls="false"
-        disable-zoom
-        disable-pan
-        disable-tap
-        autoplay
-        interaction-prompt="none" 
-        shadow-intensity="1" 
-        class="model-3d">
-      </model-viewer>
-
-      <div class="about-content">
-        <h2>About Us</h2>
-        <p>
-          AXOLOOK è uno software 3D che nasce da un esigenza. Spesso ti sarà capitato di voler comprare un indumento online, ma eri incerto sulla vestibilità o se quel particolare indumento andava bene nell outfit che ti eri immaginato. Ora con Axolook puoi dar vita agli outfit che ti immagini e visualizzarli in 3d, metterli addosso ad un manichino e personalizzarli!
-        </p>
-      </div>
-    </div>
-  </section>
 </body>
 </html>
